@@ -9,4 +9,5 @@ def ReadImage(url):
     plt.show()
     print(image.shape)
 
-ReadImage("Python\\Projekt\\durka.jpg")
+#ReadImage("Python\\Projekt\\test.jpg")
+ReadImage("test.jpg")
