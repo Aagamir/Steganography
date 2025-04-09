@@ -9,7 +9,7 @@ if mode == "1":
     input_image = str(input("Podaj nazwę pliku bez rozszerzenia w którym chcesz zakodować wiadomość:\n"))
     print(input_image)
     message = str(input("Podaj wiadomość którą chcesz zakodować w obrazie:\n"))
-    image = plt.imread(input_image+".jpg")
+    image = plt.imread("img\\"+input_image+".jpg")
     ImageEncoded = stgsnek.encode(image, message)
 
     stgfile.save_encoded_image(ImageEncoded, input_image)
