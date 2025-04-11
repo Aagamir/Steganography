@@ -18,6 +18,7 @@ def get_bin_str(string):
     return ret
 
 def encode(image, string, starting_point=0):
+    
     x = get_bin_str(string)
     x = np.array(x, dtype=np.uint8)
 
