@@ -85,7 +85,8 @@ class Aplikacja:
         motyw_menu.add_command(label=" Ciemny", command=lambda: self.ustaw_motyw("ciemny"))
         menubar.add_cascade(label="Motyw", menu=motyw_menu)
         self.root.config(menu=menubar) 
-       
+
+
 if __name__ == "__main__":
     root = tk.Tk()
     app = Aplikacja(root)
