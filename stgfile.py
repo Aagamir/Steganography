@@ -1,8 +1,13 @@
-import skimage.io
+from PIL import Image
+import numpy as np
 
 def save_encoded_image(image, file_name):
-    file_name = "img\\"+str(file_name)+".png"
-    skimage.io.imsave(file_name, image)
+    path = f"img/{file_name}.png"
+    if image.dtype != np.uint8:
+        image = image.astype(np.uint8)
+    img = Image.fromarray(image)
+    img.save(path)
 
 def load_encoded_image(file_name):
-    return skimage.io.imread("img\\"+ file_name+".png")
+    path = f"img/{file_name}.png"
+    return np.array(Image.open(path))
