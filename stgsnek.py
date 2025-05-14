@@ -17,9 +17,9 @@ def get_bin_str(string):
     ret += [0]*8
     return ret
 
-def encode(image, string, starting_point=0):
+def encode(image, bin_string, starting_point=0):
     
-    x = get_bin_str(string)
+    x = bin_string
     x = np.array(x, dtype=np.uint8)
 
     imageRound = image.copy()
@@ -32,30 +32,30 @@ def encode(image, string, starting_point=0):
 
     return np.reshape(imageRound, image.shape)
 
-def decode_utf8(image, read_every_n_bits=8, start_point=0):
-    imageDecoded = image.flatten()
-    n = read_every_n_bits
-    i = start_point
-    still_reading = True
-    string = ""
-    byte_buffer = []
-    while still_reading:
-        byte = imageDecoded[i:i+n]%2
-        byte_val = int("".join(map(str, byte)), 2)
-        if byte_val == 0:
-            still_reading = False
-        else: 
-            byte_buffer.append(byte_val)
+# def decode_utf8(image, read_every_n_bits=8, start_point=0):
+#     imageDecoded = image.flatten()
+#     n = read_every_n_bits
+#     i = start_point
+#     still_reading = True
+#     string = ""
+#     byte_buffer = []
+#     while still_reading:
+#         byte = imageDecoded[i:i+n]%2
+#         byte_val = int("".join(map(str, byte)), 2)
+#         if byte_val == 0:
+#             still_reading = False
+#         else: 
+#             byte_buffer.append(byte_val)
 
-            try:
-                char = bytes(byte_buffer).decode("utf-8")
-                string += char
-                byte_buffer = []
-            except UnicodeDecodeError:
-                pass
-        i+=8
-    print(string)
-    return string
+#             try:
+#                 char = bytes(byte_buffer).decode("utf-8")
+#                 string += char
+#                 byte_buffer = []
+#             except UnicodeDecodeError:
+#                 pass
+#         i+=8
+#     print(string)
+#     return string
 
 
 def decode(image, read_every_n_bits=7, start_point=0):
@@ -75,3 +75,22 @@ def decode(image, read_every_n_bits=7, start_point=0):
         i += 7
     print(string)
     return(string)
+
+# def caesar_encode(image, n):
+#     imageRound = image.copy()
+#     imageRound = imageRound - imageRound%2
+#     imageRound = imageRound.flatten()
+#     imageRound = (imageRound + n) % 256
+#     return np.reshape(imageRound, image.shape)
+
+def caesar_encode(message, n):
+    message = np.array(message, dtype=np.uint8)
+    n = n%256
+    message = (message + n)%256
+    return message
+
+def caesar_decode(image, n):
+    imageDecoded = image.flatten()
+    n = n%256
+    imageDecoded = (imageDecoded - n)%256
+    return np.reshape(imageDecoded, image.shape)
