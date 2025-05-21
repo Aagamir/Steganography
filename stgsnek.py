@@ -119,14 +119,14 @@ class Steganography:
             raise TypeError("Obraz musi być tablicą numpy")
             
         image = image.flatten()
-        return image.size // 8
+        return image.size // 8, image.size  #Rozmiar w bajtach (znakach) i bitach
     
     @staticmethod
     def message_character_count(message):
         if not isinstance(message, str):
             raise TypeError("Wiadomość musi być ciągiem znaków")
             
-        return len(message) * 8
+        return  len(message), len(message) * 8  # Rozmiar w bajtach (znakach) i bitach
 
 class CaesarCipher:
     def __new__(cls, message=None, shift=None):
