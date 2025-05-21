@@ -1,4 +1,6 @@
 import numpy as np
+from datetime import datetime
+import hashlib
 
 class Steganography:
     def __new__(cls, image=None, text=None, shift=None):
@@ -52,7 +54,7 @@ class Steganography:
         image_round = image_round.flatten()
         image_round[starting_point:x.size+starting_point] += x
        
-        return np.reshape(image_round, image.shape)
+        return np.reshape(image_round, image.shape), datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
     @staticmethod
     def decode_utf8(image, read_every_n_bits=8, start_point=0):
@@ -127,36 +129,3 @@ class Steganography:
             raise TypeError("Wiadomość musi być ciągiem znaków")
             
         return  len(message), len(message) * 8  # Rozmiar w bajtach (znakach) i bitach
-
-class CaesarCipher:
-    def __new__(cls, message=None, shift=None):
-        if message is not None and not isinstance(message, str):
-            raise TypeError("Wiadomość musi być ciągiem znaków")
-        if shift is not None and not isinstance(shift, int):
-            raise TypeError("Przesunięcie musi być liczbą całkowitą")
-            
-        return super().__new__(cls)
-    
-    @staticmethod
-    def encode(message, shift):
-        if not isinstance(message, str):
-            raise TypeError("Wiadomość musi być ciągiem znaków")
-        if not isinstance(shift, int):
-            raise TypeError("Przesunięcie musi być liczbą całkowitą")
-            
-        encoded_message = ""
-        for char in message:
-            encoded_message += chr((ord(char) + shift) % 0x110000)  # zakres pełnego Unicode
-        return encoded_message
-
-    @staticmethod
-    def decode(message, shift):
-        if not isinstance(message, str):
-            raise TypeError("Wiadomość musi być ciągiem znaków")
-        if not isinstance(shift, int):
-            raise TypeError("Przesunięcie musi być liczbą całkowitą")
-            
-        decoded_message = ""
-        for char in message:
-            decoded_message += chr((ord(char) - shift) % 0x110000)
-        return decoded_message
