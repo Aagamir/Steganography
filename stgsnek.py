@@ -112,6 +112,21 @@ class Steganography:
                 string += chr(character)
             i += 7
         return string
+    
+    @staticmethod
+    def show_picture_capacity(image):
+        if not isinstance(image, np.ndarray):
+            raise TypeError("Obraz musi być tablicą numpy")
+            
+        image = image.flatten()
+        return image.size // 8
+    
+    @staticmethod
+    def message_character_count(message):
+        if not isinstance(message, str):
+            raise TypeError("Wiadomość musi być ciągiem znaków")
+            
+        return len(message) * 8
 
 class CaesarCipher:
     def __new__(cls, message=None, shift=None):
