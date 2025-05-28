@@ -37,6 +37,12 @@ class SteganoApp:
                 "frame": "#F0F0F0", "button": "#E0E0E0",
                 "text_bg": "#FFFFFF", "text_fg": "#000000",
                 "disabled_bg": "#E8E8E8"
+            },
+            "matrix": {
+                "bg": "#0D0208", "fg": "#0D0208",
+                "frame": "#008F11", "button": "#0D0208",
+                "text_bg": "#008F11", "text_fg": "#0D0208",
+                "disabled_bg": "#0D0208"
             }
         }
         self.current_theme = "dark"
@@ -56,6 +62,7 @@ class SteganoApp:
         theme_menu = tk.Menu(menubar, tearoff=0)
         theme_menu.add_command(label="Ciemny", command=lambda: self._change_theme("dark"))
         theme_menu.add_command(label="Jasny", command=lambda: self._change_theme("light"))
+        theme_menu.add_command(label="Matrix", command=lambda: self._change_theme("matrix"))
         menubar.add_cascade(label="Motyw", menu=theme_menu)
         
         self.root.config(menu=menubar)
