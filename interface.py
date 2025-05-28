@@ -46,7 +46,7 @@ class SteganoApp:
         
         # Menu plikowe
         file_menu = tk.Menu(menubar, tearoff=0)
-        file_menu.add_command(label="Otwórz obraz", command=self._load_image)
+        file_menu.add_command(label="Wczytaj obraz", command=self._load_image)
         file_menu.add_command(label="Zapisz obraz", command=self._save_image)
         file_menu.add_command(label="Zapisz tekst", command=self._save_text)
         file_menu.add_command(label="Wczytaj tekst", command=self._load_text)
@@ -319,7 +319,7 @@ class SteganoApp:
                 
                 self.capacity_label.config(
                     text=f"Dostępne bity: {max_bits}\n"
-                         f"Wykorzystane: {text_chars * 8} ({text_chars} znaków)\n"
+                         f"Wykorzystane:\n {text_chars * 8} ({text_chars} znaków)\n"
                          f"Pozostało: {max_bits - (text_chars * 8)}"
                 )
             except AttributeError:
