@@ -278,7 +278,7 @@ class SteganoApp:
                 
                 self.capacity_label.config(
                     text=f"Dostępne bity: {max_bits}\n"
-                         f"Wykorzystane: {text_chars * 8} ({text_chars} znaków)\n"
+                         f"Użyto: {text_chars * 8} ({text_chars} znaków)\n"
                          f"Pozostało: {max_bits - (text_chars * 8)}"
                 )
             except AttributeError:
