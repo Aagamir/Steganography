@@ -1,6 +1,5 @@
 import numpy as np
 from datetime import datetime
-import hashlib
 
 class Steganography:
     def __new__(cls, image=None, text=None, shift=None):

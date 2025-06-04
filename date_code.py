@@ -4,11 +4,8 @@ import hashlib
 class DateCipher:
     def __new__(cls, custom_date=None):
         instance = super().__new__(cls)
-        
-        # Inicjalizacja atrybutów instancji
         instance.date_format = "%Y-%m-%d"
         if custom_date:
-            # Walidacja formatu
             try:
                 datetime.strptime(custom_date, instance.date_format)
                 instance.date_key = custom_date
@@ -16,7 +13,6 @@ class DateCipher:
                 raise ValueError(f"Data musi być w formacie {instance.date_format} (np. 2025-06-04)")
         else:
             instance.date_key = datetime.now().strftime(instance.date_format)
-        
         return instance
     
     def get_date_key(self):
@@ -38,7 +34,7 @@ class DateCipher:
         
         for i, char in enumerate(message):
             key_part = ord(key[i % len(key)])
-            encrypted_char = chr(ord(char) ^ key_part)
+            encrypted_char = chr(ord(char) ^ key_part) # ^ to operacja XOR
             encrypted.append(encrypted_char)
         
         return ''.join(encrypted)
