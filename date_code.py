@@ -15,7 +15,7 @@ class DateCipher:
             except ValueError:
                 raise ValueError(f"Data musi być w formacie {instance.date_format} (np. 2025-06-04)")
         else:
-            instance.date_key = datetime.now().strftime(instance.date_format
+            instance.date_key = datetime.now().strftime(instance.date_format)
         
         return instance
     
