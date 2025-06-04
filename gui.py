@@ -1,3 +1,0 @@
-import stgfile
-import stgsnek
-
