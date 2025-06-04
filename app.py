@@ -354,7 +354,6 @@ def decrypt_text(text, algorithm, shift=3):
         return DateCipher().decrypt(text)
     return text            
 
-import tkinter as tk
 
 
 if __name__ == "__main__":
