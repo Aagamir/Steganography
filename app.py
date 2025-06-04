@@ -32,10 +32,10 @@ class SteganoApp:
         menubar = tk.Menu(self.root)
         
         file_menu = tk.Menu(menubar, tearoff=0)
-        file_menu.add_command(label="Otwórz obraz", command=self._load_image)
+        file_menu.add_command(label="Wczytaj obraz", command=self._load_image)
         file_menu.add_command(label="Zapisz obraz", command=self._save_image)
-        file_menu.add_command(label="Zapisz tekst", command=self._save_text)
         file_menu.add_command(label="Wczytaj tekst", command=self._load_text)
+        file_menu.add_command(label="Zapisz tekst", command=self._save_text)
         menubar.add_cascade(label="Plik", menu=file_menu)
         
         theme_menu = tk.Menu(menubar, tearoff=0)
