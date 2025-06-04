@@ -118,7 +118,7 @@ class SteganoApp:
                fg=self.themes[self.current_theme]["fg"]).pack(side="left")
         
         self.algorithm_combo = ttk.Combobox(algorithm_frame, 
-                                          values=["Wybierz szyfrowanie","Date Cipher","Caesar"],
+                                          values=["Wybierz szyfr","Date Cipher","Caesar"],
                                           width=12)
         self.algorithm_combo.current(0)
         self.algorithm_combo.pack(side="left", padx=5)
