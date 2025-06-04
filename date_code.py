@@ -1,5 +1,6 @@
 from datetime import datetime
 import hashlib
+import base64
 
 class DateCipher:
     def __new__(cls, custom_date=None):
@@ -34,11 +35,23 @@ class DateCipher:
         
         for i, char in enumerate(message):
             key_part = ord(key[i % len(key)])
-            encrypted_char = chr(ord(char) ^ key_part) # ^ to operacja XOR
+            encrypted_char = chr(ord(char) ^ key_part)
             encrypted.append(encrypted_char)
         
-        return ''.join(encrypted)
+        # Zamieniamy na bity i zapisujemy jako base64 dla łatwego zapisu
+        encrypted_bytes = ''.join(encrypted).encode('utf-8')
+        return base64.b64encode(encrypted_bytes).decode('utf-8')
     
     def decrypt(self, encrypted_message):
         """Deszyfrowanie wiadomości"""
-        return self.encrypt(encrypted_message)  # XOR jest odwracalny tym samym kluczem
+        # Dekodujemy z base64 na bity a potem do stringa
+        encrypted_bytes = base64.b64decode(encrypted_message.encode('utf-8'))
+        encrypted_str = encrypted_bytes.decode('utf-8')
+        # Do odszywrowania używamy tej samej logiki co do szyfrowania
+        key = self._generate_key()
+        decrypted = []
+        for i, char in enumerate(encrypted_str):
+            key_part = ord(key[i % len(key)])
+            decrypted_char = chr(ord(char) ^ key_part)
+            decrypted.append(decrypted_char)
+        return ''.join(decrypted)
