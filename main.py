@@ -24,17 +24,5 @@ import stgfile
 # elif mode == "3":
 #     exit()
 
-message = "Wiadomość testowa"
-image = (plt.imread("img\\test.jpg") * 255).astype(np.uint8)
-MessageEncoded = stgsnek.caesar_encode(message, 3)
-BinaryMessage = stgsnek.get_bin_str(MessageEncoded)
-ImageEncoded = stgsnek.encode(image, BinaryMessage)
-stgfile.save_encoded_image(ImageEncoded, "test2") 
-print("Wiadomośc po zaszyfrowaniu:\n")
-print(MessageEncoded)  
-print("Ukryta wiadomość w obrazie to:\n")
-decoded = stgsnek.decode_utf8(stgfile.load_encoded_image("test2"))
-print(decoded)
-print("Po odszyfrowaniu:\n")
-print(stgsnek.caesar_decode(decoded, 3))
+
 
