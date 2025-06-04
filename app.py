@@ -1,8 +1,10 @@
+
 import tkinter as tk
 from tkinter import ttk, filedialog
 from PIL import Image
 import numpy as np
 from date_code import DateCipher
+from datetime import datetime  # Dodaj tę linię
 from caesar_code import CaesarCipher
 from stgfile import FileHandler
 from Themes import THEMES
@@ -18,16 +20,20 @@ class SteganoApp:
         self.current_image = None
         self.processed_image = None
         self.decrypted_text = ""
-        self.caesar_shift = tk.IntVar(value=3)  # Domyślne przesunięcie
-        
+        self.caesar_shift  = tk.IntVar(value=3)  # Domyślne przesunięcie
+        self.date_key = tk.StringVar(value=datetime.now().strftime("%Y-%m-%d"))  
         self.themes = THEMES
         self.current_theme = "dark"
         
         self._setup_ui()
+        self._toggle_algorithm_controls()  # Ustaw widoczność kontrolek
         self._setup_menu()
         self._setup_bindings()
-        self._toggle_shift_entry()  # Ustawienie widoczności ramki przesunięcia
+        self._toggle_algorithm_controls()  # Ustawienie widoczności ramki przesunięcia
 
+    def _set_current_date(self):
+        now = datetime.now().strftime("%Y-%m-%d")  # Użyj datetime z importu
+        self.date_key.set(now)
     def _setup_menu(self):
         menubar = tk.Menu(self.root)
         
@@ -89,7 +95,22 @@ class SteganoApp:
         # Ramka przesunięcia Cezara (widoczna na początku)
         self.shift_frame = tk.Frame(self.center_panel, bg=self.themes[self.current_theme]["frame"])
         self.shift_frame.pack(pady=5)
+                # Ramka daty dla Date Cipher
+        self.date_frame = tk.Frame(self.center_panel, bg=self.themes[self.current_theme]["frame"])
         
+        tk.Label(self.date_frame, text="Data :", 
+               bg=self.themes[self.current_theme]["frame"],
+               fg=self.themes[self.current_theme]["fg"]).pack(side="left", padx=5)
+        
+        self.date_entry = ttk.Entry(self.date_frame, textvariable=self.date_key, width=10)
+        self.date_entry.pack(side="left", padx=5)
+        
+        # Przycisk do ustawienia aktualnej daty
+        current_date_btn = tk.Button(self.date_frame, text="Teraz", command=self._set_current_date,
+                                   bg=self.themes[self.current_theme]["button"],
+                                   fg=self.themes[self.current_theme]["fg"])
+        current_date_btn.pack(side="left", padx=5)
+
         tk.Label(self.shift_frame, text="Przesunięcie:", 
                bg=self.themes[self.current_theme]["frame"],
                fg=self.themes[self.current_theme]["fg"]).pack(side="left")
@@ -122,7 +143,7 @@ class SteganoApp:
                                           width=12)
         self.algorithm_combo.current(0)
         self.algorithm_combo.pack(side="left", padx=5)
-        self.algorithm_combo.bind("<<ComboboxSelected>>", self._toggle_shift_entry)
+        self.algorithm_combo.bind("<<ComboboxSelected>>", self._toggle_algorithm_controls)
         
         # Przyciski akcji
         btn_frame = tk.Frame(self.center_panel, bg=self.themes[self.current_theme]["frame"])
@@ -144,12 +165,19 @@ class SteganoApp:
                                      fg=self.themes[self.current_theme]["fg"])
         self.capacity_label.pack(pady=10)
 
-    def _toggle_shift_entry(self, event=None):
-        """Pokazuje/ukrywa pole przesunięcia w zależności od wybranego algorytmu"""
-        if self.algorithm_combo.get() == "Caesar":
+    def _toggle_algorithm_controls(self, event=None):
+        """Pokazuje/ukrywa kontrolki w zależności od wybranego algorytmu"""
+        algorithm = self.algorithm_combo.get()
+        
+        # Ukryj wszystkie ramki
+        self.shift_frame.pack_forget()
+        self.date_frame.pack_forget()
+        
+        # Pokaż odpowiednią ramkę
+        if algorithm == "Caesar":
             self.shift_frame.pack(pady=5)
-        else:
-            self.shift_frame.pack_forget()
+        elif algorithm == "Date Cipher":
+            self.date_frame.pack(pady=5)
 
     def _create_text_section(self):
         self.text_label = tk.Label(self.text_panel, text="Tekst do zaszyfrowania:",
@@ -234,9 +262,15 @@ class SteganoApp:
 
     def _encode_process(self):
         text = self.text_entry.get("1.0", tk.END).strip()
+        # DODAJ TĘ LINIĘ: Pobierz aktualnie wybrany algorytm
         algorithm = self.algorithm_combo.get()
         
-        encrypted_text = encrypt_text(text, algorithm, self.caesar_shift.get())
+        try:
+            encrypted_text = encrypt_text(text, algorithm, self.caesar_shift.get(), self.date_key.get())
+        except Exception as e:
+            tk.messagebox.showerror("Błąd szyfrowania", f"Użyto bieżącej daty: {str(e)}")
+            encrypted_text = encrypt_text(text, algorithm, self.caesar_shift.get(), None)
+        
         binary_data = Steganography.get_bin_str(encrypted_text)
         
         try:
@@ -246,19 +280,24 @@ class SteganoApp:
         except ValueError as e:
             tk.messagebox.showerror("Błąd kodowania", str(e))
 
+
+
     def _decode_process(self):
         try:
             if not isinstance(self.current_image, np.ndarray):
                 raise TypeError("Nieprawidłowy format obrazu")
             
             decoded_bits = Steganography.decode_utf8(self.current_image)
-            detected_algo = detect_algorithm(decoded_bits)
             
-            if detected_algo:
-                self.algorithm_combo.set(detected_algo)
-                tk.messagebox.showinfo("Wykryto algorytm", f"Wykryto: {detected_algo}")
+         
+            algorithm = self.algorithm_combo.get()
             
-            self.decrypted_text = decrypt_text(decoded_bits, self.algorithm_combo.get(), self.caesar_shift.get())
+            try:
+                self.decrypted_text = decrypt_text(decoded_bits, algorithm, self.caesar_shift.get(), self.date_key.get())
+            except Exception as e:
+                tk.messagebox.showerror("Błąd deszyfrowania", f"Użyto bieżącej daty: {str(e)}")
+                self.decrypted_text = decrypt_text(decoded_bits, algorithm, self.caesar_shift.get(), None)
+            
             self._update_text_display(self.decrypted_text)
         except Exception as e:
             tk.messagebox.showerror("Błąd dekodowania", str(e))
@@ -340,19 +379,25 @@ class SteganoApp:
 
 
 
-def encrypt_text(text, algorithm, shift=3):
+def encrypt_text(text, algorithm, shift=3, date_str=None):
     if algorithm == "Caesar":
         return CaesarCipher.encode(text, shift)
     elif algorithm == "Date Cipher":
-        return DateCipher().encrypt(text)
+        try:
+            return DateCipher(date_str).encrypt(text)
+        except ValueError as e:
+            return DateCipher().encrypt(text)
     return text
 
-def decrypt_text(text, algorithm, shift=3):
+def decrypt_text(text, algorithm, shift=3, date_str=None):
     if algorithm == "Caesar":
         return CaesarCipher.decode(text, shift)
     elif algorithm == "Date Cipher":
-        return DateCipher().decrypt(text)
-    return text            
+        try:
+            return DateCipher(date_str).decrypt(text)
+        except ValueError as e:
+            return DateCipher().decrypt(text)
+    return text        
 
 
 

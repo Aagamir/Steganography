@@ -1,7 +1,6 @@
 import re
 import numpy as np
 from PIL import Image, ImageTk
-import tkinter as tk
 from tkinter import messagebox
 from stgsnek import Steganography
 
@@ -27,15 +26,3 @@ def display_image(img, canvas):
     except Exception as e:
         messagebox.showerror("Błąd wyświetlania", str(e))
 
-def detect_algorithm(text):
-    detectors = [
-        (r"^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}", "Date Cipher"),
-        (r"^[^\x00-\x7F]+", "Caesar"),
-        (r"^[A-F0-9]{64}:", "AES"),
-        (r"^\d+,\d+", "RSA")
-    ]
-    
-    for pattern, algo in detectors:
-        if re.match(pattern, text):
-            return algo
-    return None
