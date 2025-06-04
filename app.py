@@ -118,7 +118,7 @@ class SteganoApp:
                fg=self.themes[self.current_theme]["fg"]).pack(side="left")
         
         self.algorithm_combo = ttk.Combobox(algorithm_frame, 
-                                          values=["Caesar", "Date Cipher", "AES", "RSA"],
+                                          values=["Bitowo","Date Cipher","Caesar"],
                                           width=12)
         self.algorithm_combo.current(0)
         self.algorithm_combo.pack(side="left", padx=5)
@@ -354,7 +354,6 @@ def decrypt_text(text, algorithm, shift=3):
         return DateCipher().decrypt(text)
     return text            
 
-import tkinter as tk
 
 
 if __name__ == "__main__":
